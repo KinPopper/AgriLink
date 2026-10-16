@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink - Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HEADER / NAVIGATION -->
+    <header>
+        <h1>AgriLink Admin Panel</h1>
+        <p>Platform Management & Live Financial Statistics</p>
+        <nav>
+            <a href="admin.html">Dashboard</a> | 
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container admin-container" style="max-width: 900px; margin-bottom: 60px;">
+        
+        <!-- WELCOME BANNER -->
+        <div class="welcome-banner">
+            <h2>👑 Welcome, System Administrator!</h2>
+            <p>Monitor real-time producer earnings, order volumes, and user account status.</p>
+        </div>
+
+        <!-- OVERALL PLATFORM STATISTICS (LIVE SYNCED) -->
+        <h3 class="section-title">📊 Overall Platform Statistics (Live)</h3>
+        <div class="stats-row" style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
+            <div class="stat-box" style="flex: 1; min-width: 180px; background: #e8f5e9; padding: 15px; border-radius: 6px; border: 1px solid #c8e6c9;">
+                <h4 style="margin: 0 0 5px 0; color: #2e7d32;">Total Shipped Sales</h4>
+                <p class="stat-value" id="statTotalSales" style="font-size: 22px; font-weight: bold; margin: 0; color: #2e7d32;">₱0.00</p>
+            </div>
+            <div class="stat-box" style="flex: 1; min-width: 180px; background: #fff3cd; padding: 15px; border-radius: 6px; border: 1px solid #ffeeba;">
+                <h4 style="margin: 0 0 5px 0; color: #856404;">Total Pending Sales</h4>
+                <p class="stat-value" id="statPendingSales" style="font-size: 22px; font-weight: bold; margin: 0; color: #856404;">₱0.00</p>
+            </div>
+            <div class="stat-box" style="flex: 1; min-width: 180px; background: #f9f9f9; padding: 15px; border-radius: 6px; border: 1px solid #ddd;">
+                <h4 style="margin: 0 0 5px 0; color: #333;">Active Crops</h4>
+                <p class="stat-value" id="statActiveCrops" style="font-size: 22px; font-weight: bold; margin: 0; color: #333;">0 Listings</p>
+            </div>
+        </div>
+
+        <!-- REGISTERED PRODUCERS & LIVE EARNINGS -->
+        <h3 class="section-title">👨‍🌾 Registered Producers & Live Synchronized Earnings</h3>
+        <table class="agri-table">
+            <thead>
+                <tr>
+                    <th>Producer Name</th>
+                    <th>Farm / Business Name</th>
+                    <th>Pending Revenue</th>
+                    <th>Total Sales (Shipped)</th>
+                    <th style="text-align: center;">Account Action</th>
+                </tr>
+            </thead>
+            <tbody id="producerAdminTable">
+                <!-- Dynamically populated from localStorage -->
+            </tbody>
+        </table>
+
+        <!-- REGISTERED CONSUMERS -->
+        <h3 class="section-title" style="margin-top: 35px;">🛒 Registered Consumers</h3>
+        <table class="agri-table">
+            <thead>
+                <tr>
+                    <th>Consumer Name</th>
+                    <th>Email Address</th>
+                    <th style="text-align: center;">Account Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Maria Santos</td>
+                    <td>buyer@agrilink.com</td>
+                    <td style="text-align: center;">
+                        <button id="btn-buyer@agrilink.com" onclick="toggleDeactivate('buyer@agrilink.com')" class="btn-action" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Deactivate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Carlos Gomez</td>
+                    <td>consumer1@agrilink.com</td>
+                    <td style="text-align: center;">
+                        <button id="btn-consumer1@agrilink.com" onclick="toggleDeactivate('consumer1@agrilink.com')" class="btn-action" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Deactivate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bea Alonzo</td>
+                    <td>consumer2@agrilink.com</td>
+                    <td style="text-align: center;">
+                        <button id="btn-consumer2@agrilink.com" onclick="toggleDeactivate('consumer2@agrilink.com')" class="btn-action" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Deactivate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Jose Rizal</td>
+                    <td>consumer3@agrilink.com</td>
+                    <td style="text-align: center;">
+                        <button id="btn-consumer3@agrilink.com" onclick="toggleDeactivate('consumer3@agrilink.com')" class="btn-action" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Deactivate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Corazon Aquino</td>
+                    <td>consumer4@agrilink.com</td>
+                    <td style="text-align: center;">
+                        <button id="btn-consumer4@agrilink.com" onclick="toggleDeactivate('consumer4@agrilink.com')" class="btn-action" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Deactivate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Andres Bonifacio</td>
+                    <td>consumer5@agrilink.com</td>
+                    <td style="text-align: center;">
+                        <button id="btn-consumer5@agrilink.com" onclick="toggleDeactivate('consumer5@agrilink.com')" class="btn-action" style="background: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Deactivate</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 AgriLink - ICCT Colleges Web Project</p>
+    </footer>
+
+    <!-- LIVE SYNCHRONIZATION & ADMIN LOGIC SCRIPT -->
+    <script>
+        var producers = [
+            { name: "Juan Dela Cruz", farm: "Dela Cruz Organic Farms", email: "farmer@agrilink.com", baseShipped: 4350.00 },
+            { name: "Maria Santos", farm: "Green Valley Hydroponics", email: "farmer2@agrilink.com", baseShipped: 3100.00 },
+            { name: "Pedro Penduko", farm: "Penduko Highland Crops", email: "farmer3@agrilink.com", baseShipped: 2800.00 },
+            { name: "Ana Reyes", farm: "Reyes Integrated Farm", email: "farmer4@agrilink.com", baseShipped: 2200.00 }
+        ];
+
+        function loadAdminData() {
+            var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
+            var crops = JSON.parse(localStorage.getItem("agrilink_crops") || "[]");
+
+            var platformShippedTotal = 0;
+            var platformPendingTotal = 0;
+
+            var tbody = document.getElementById("producerAdminTable");
+            tbody.innerHTML = "";
+
+            producers.forEach(function(prod) {
+                var pendingRev = 0;
+                var shippedRev = prod.baseShipped; // Base historical revenue
+
+                // Calculate synchronized order amounts for this producer
+                orders.forEach(function(o) {
+                    if (o.seller === prod.farm) {
+                        if (o.status === "Accepted") {
+                            pendingRev += o.total;
+                        } else if (o.status === "Shipped") {
+                            shippedRev += o.total;
+                        }
+                    }
+                });
+
+                platformShippedTotal += shippedRev;
+                platformPendingTotal += pendingRev;
+
+                var isDeactivated = localStorage.getItem("deactivate_" + prod.email) === "true";
+                var btnColor = isDeactivated ? "#5cb85c" : "#d9534f";
+                var btnText = isDeactivated ? "Activate" : "Deactivate";
+
+                var row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>
+                        <a href="#" onclick="showProducerReport('${prod.name}', '${prod.farm}', ${pendingRev}, ${shippedRev})" 
+                           style="color: #2e7d32; font-weight: bold; text-decoration: underline;">
+                           ${prod.name}
+                        </a>
+                    </td>
+                    <td>${prod.farm}</td>
+                    <td style="color: #856404; font-weight: bold;">₱${pendingRev.toFixed(2)}</td>
+                    <td style="color: #2e7d32; font-weight: bold;">₱${shippedRev.toFixed(2)}</td>
+                    <td style="text-align: center;">
+                        <button id="btn-${prod.email}" onclick="toggleDeactivate('${prod.email}')" class="btn-action" 
+                                style="background: ${btnColor}; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                            ${btnText}
+                        </button>
+                    </td>
+                `;
+            });
+
+            // Update top overall platform stats
+            document.getElementById("statTotalSales").innerText = "₱" + platformShippedTotal.toFixed(2);
+            document.getElementById("statPendingSales").innerText = "₱" + platformPendingTotal.toFixed(2);
+            document.getElementById("statActiveCrops").innerText = crops.length + " Listings";
+
+            // Update status of consumer deactivate buttons
+            var consumerEmails = ["buyer@agrilink.com", "consumer1@agrilink.com", "consumer2@agrilink.com", "consumer3@agrilink.com", "consumer4@agrilink.com", "consumer5@agrilink.com"];
+            consumerEmails.forEach(function(email) {
+                var btn = document.getElementById("btn-" + email);
+                if (btn) {
+                    var isDeact = localStorage.getItem("deactivate_" + email) === "true";
+                    btn.style.background = isDeact ? "#5cb85c" : "#d9534f";
+                    btn.innerText = isDeact ? "Activate" : "Deactivate";
+                }
+            });
+        }
+
+        function showProducerReport(name, farm, pending, shipped) {
+            alert("📊 Detailed Financial Report\n\n" +
+                  "Farmer: " + name + "\n" +
+                  "Farm Name: " + farm + "\n" +
+                  "-----------------------------------\n" +
+                  "⏳ Pending Revenue (Accepted): ₱" + pending.toFixed(2) + "\n" +
+                  "💰 Shipped Revenue (Sales): ₱" + shipped.toFixed(2) + "\n" +
+                  "-----------------------------------\n" +
+                  "📈 Total Outstanding Earnings: ₱" + (pending + shipped).toFixed(2));
+        }
+
+        function toggleDeactivate(email) {
+            var isDeactivated = localStorage.getItem("deactivate_" + email) === "true";
+            
+            if (isDeactivated) {
+                localStorage.removeItem("deactivate_" + email);
+                alert("✅ Account " + email + " has been re-activated.");
+            } else {
+                localStorage.setItem("deactivate_" + email, "true");
+                alert("❌ Account " + email + " has been deactivated by Admin.");
+            }
+
+            loadAdminData();
+        }
+
+        window.onload = function() {
+            loadAdminData();
+        };
+    </script>
+
+</body>
+</html>

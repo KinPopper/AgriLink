@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>AgriLink</h1>
+        <p>Direct Producer-to-Consumer Market</p>
+        <nav>
+            <a href="index.html">Home</a> | 
+            <a href="register.html">Register</a> | 
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 450px; margin-top: 40px; margin-bottom: 60px;">
+        <h2 style="text-align: center;">User Login</h2>
+
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email / Username:</label>
+                <input type="text" id="email" placeholder="e.g. farmer@agrilink.com or consumer1@agrilink.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Login</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 15px; font-size: 14px;">
+            Don't have an account? <a href="register.html" style="color: #2e7d32; font-weight: bold;">Register here</a>
+        </p>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 AgriLink - ICCT Colleges Web Project</p>
+    </footer>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var emailInput = document.getElementById("email").value.trim().toLowerCase();
+            var passwordInput = document.getElementById("password").value.trim();
+
+            // 1. Strict Admin Deactivation Check
+            if (localStorage.getItem("deactivate_" + emailInput) === "true") {
+                alert("❌ Login Blocked: Your account has been deactivated by the Admin.");
+                return;
+            }
+
+            // 2. Account Directory Database Mapping
+            var accounts = {
+                // Admin
+                "admin": { password: "admin", name: "System Administrator", role: "admin", page: "admin.html" },
+
+                // Producers
+                "farmer@agrilink.com": { password: "123456", name: "Juan Dela Cruz", farm: "Dela Cruz Organic Farms", role: "producer", page: "producer.html" },
+                "farmer2@agrilink.com": { password: "123456", name: "Maria Santos", farm: "Green Valley Hydroponics", role: "producer", page: "producer.html" },
+                "farmer3@agrilink.com": { password: "123456", name: "Pedro Penduko", farm: "Penduko Highland Crops", role: "producer", page: "producer.html" },
+                "farmer4@agrilink.com": { password: "123456", name: "Ana Reyes", farm: "Reyes Integrated Farm", role: "producer", page: "producer.html" },
+
+                // Consumers
+                "buyer@agrilink.com": { password: "123456", name: "Maria Santos", role: "consumer", page: "consumer.html" },
+                "consumer1@agrilink.com": { password: "123456", name: "Carlos Gomez", role: "consumer", page: "consumer.html" },
+                "consumer2@agrilink.com": { password: "123456", name: "Bea Alonzo", role: "consumer", page: "consumer.html" },
+                "consumer3@agrilink.com": { password: "123456", name: "Jose Rizal", role: "consumer", page: "consumer.html" },
+                "consumer4@agrilink.com": { password: "123456", name: "Corazon Aquino", role: "consumer", page: "consumer.html" },
+                "consumer5@agrilink.com": { password: "123456", name: "Andres Bonifacio", role: "consumer", page: "consumer.html" }
+            };
+
+            // Check if user exists in predefined catalog
+            var user = accounts[emailInput];
+
+            if (user) {
+                if (user.password === passwordInput) {
+                    localStorage.setItem("loggedInUser", user.name);
+                    localStorage.setItem("loggedInEmail", emailInput);
+                    localStorage.setItem("loggedInRole", user.role);
+                    if (user.farm) {
+                        localStorage.setItem("loggedInFarm", user.farm);
+                    }
+                    window.location.href = user.page;
+                } else {
+                    alert("❌ Invalid password! Please try again.");
+                }
+            } else {
+                // Dynamic fallback for newly registered or custom users
+                localStorage.setItem("loggedInUser", emailInput.split("@")[0] || "User");
+                localStorage.setItem("loggedInEmail", emailInput);
+                localStorage.setItem("loggedInRole", "consumer");
+                window.location.href = "consumer.html";
+            }
+        });
+    </script>
+
+</body>
+</html>

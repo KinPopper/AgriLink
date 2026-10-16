@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink - Consumer Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>AgriLink Marketplace</h1>
+        <p>Fresh Produce Direct From Local Farmers</p>
+        <nav>
+            <a href="index.html">Home</a> | 
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 850px; margin-bottom: 60px;">
+        
+        <!-- DYNAMIC CONSUMER WELCOME BANNER -->
+        <div class="welcome-banner">
+            <h2 id="consumerWelcomeTitle">🛒 Welcome, Consumer!</h2>
+            <p>Explore fresh harvests directly supplied by registered local producers.</p>
+        </div>
+
+        <!-- SHOPPING CART SUMMARY WIDGET -->
+        <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 5px; margin-bottom: 25px;">
+            <h3 style="margin-top: 0; color: #856404;">🛒 My Shopping Cart Summary</h3>
+            <p style="margin: 0 0 10px 0;" id="cartSummaryText">Items in cart: <strong>0 items</strong> | Total Amount: <strong>₱0.00</strong></p>
+            <button onclick="checkoutOrder()" class="btn-submit" style="background-color: #f0ad4e; width: auto; padding: 8px 15px;">Submit Order Request</button>
+        </div>
+
+        <!-- SEARCH & CATEGORY FILTER -->
+        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #ddd; margin-bottom: 25px;">
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label>Search Produce Name:</label>
+                <input type="text" id="searchInput" placeholder="Search crops (e.g. Tomatoes, Corn, Rice)..." onkeyup="filterCrops()">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Filter by Category:</label>
+                <select id="categorySelect" onchange="filterCrops()">
+                    <option value="all">All Categories</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Grains & Rice">Grains & Rice</option>
+                </select>
+            </div>
+        </div>
+
+        <h3 class="section-title">📦 Fresh Produce Listings (All Registered Farmers)</h3>
+
+        <!-- DYNAMIC LISTINGS -->
+        <div id="consumerCropListings"></div>
+
+        <!-- ORDER TRACKING -->
+        <h3 class="section-title">📋 My Submitted Orders & Progress Tracking</h3>
+        <table class="agri-table">
+            <thead>
+                <tr>
+                    <th>Order Item</th>
+                    <th>Seller / Farm</th>
+                    <th>Qty & Total</th>
+                    <th style="text-align: center;">Status Flag</th>
+                </tr>
+            </thead>
+            <tbody id="myOrdersTableBody"></tbody>
+        </table>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 AgriLink - ICCT Colleges Web Project</p>
+    </footer>
+
+    <script>
+        var currentUserName = localStorage.getItem("loggedInUser") || "Carlos Gomez";
+        var cartCount = 0;
+        var cartTotal = 0;
+        var cartItems = [];
+
+        // Full multi-seller initial crop inventory
+        var defaultCrops = [
+            { id: 101, name: "Fresh Red Tomatoes", seller: "Dela Cruz Organic Farms", category: "Vegetables", price: 60, stock: 100 },
+            { id: 102, name: "Sweet Yellow Corn", seller: "Dela Cruz Organic Farms", category: "Grains & Rice", price: 45, stock: 250 },
+            { id: 103, name: "Fresh Red Tomatoes", seller: "Green Valley Hydroponics", category: "Vegetables", price: 65, stock: 120 },
+            { id: 104, name: "Organic Mangoes", seller: "Green Valley Hydroponics", category: "Fruits", price: 120, stock: 80 },
+            { id: 105, name: "Mountain Potatoes", seller: "Penduko Highland Crops", category: "Vegetables", price: 80, stock: 150 },
+            { id: 106, name: "Sinaging Special Rice", seller: "Reyes Integrated Farm", category: "Grains & Rice", price: 55, stock: 500 }
+        ];
+
+        function getCrops() {
+            var stored = localStorage.getItem("agrilink_crops");
+            // Auto-fix storage if old single-farmer structure was cached
+            if (!stored || JSON.parse(stored).length < 6) {
+                localStorage.setItem("agrilink_crops", JSON.stringify(defaultCrops));
+                return defaultCrops;
+            }
+            return JSON.parse(stored);
+        }
+
+        function renderConsumerListings() {
+            var crops = getCrops();
+            var container = document.getElementById("consumerCropListings");
+            container.innerHTML = "";
+
+            crops.forEach(function(crop, index) {
+                var stockText = crop.stock > 0 ? crop.stock + " kg" : "<span style='color: red; font-weight: bold;'>SOLD OUT</span>";
+                
+                var card = document.createElement("div");
+                card.className = "produce-card";
+                card.setAttribute("data-name", crop.name.toLowerCase());
+                card.setAttribute("data-category", crop.category);
+
+                card.innerHTML = `
+                    <h3 style="color: #2e7d32; margin-top: 0; margin-bottom: 5px;">📦 ${crop.name}</h3>
+                    <p style="margin: 3px 0;"><strong>Farmer / Seller:</strong> <span style="color: #2e7d32; font-weight: bold;">${crop.seller}</span></p>
+                    <p style="margin: 3px 0;"><strong>Category:</strong> ${crop.category}</p>
+                    <p style="margin: 3px 0;"><strong>Price:</strong> ₱${parseFloat(crop.price).toFixed(2)} / kg</p>
+                    <p style="margin: 3px 0; color: #2e7d32;"><strong>Available Stock:</strong> ${stockText}</p>
+                    
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-weight: bold;">Quantity (kg):</label>
+                        <input type="number" id="qty-${index}" value="1" min="1" max="${crop.stock}" style="width: 70px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+                        <button onclick="addToCart(${index})" class="btn-submit" style="width: auto; padding: 8px 15px;" ${crop.stock <= 0 ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''}>Add to Cart</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addToCart(index) {
+            var crops = getCrops();
+            var crop = crops[index];
+            var qtyInput = document.getElementById("qty-" + index);
+            var qty = parseInt(qtyInput.value);
+
+            if (isNaN(qty) || qty <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            if (qty > crop.stock) {
+                alert("❌ Requested quantity exceeds available stock!");
+                return;
+            }
+
+            cartCount += qty;
+            cartTotal += (crop.price * qty);
+            cartItems.push({ cropIndex: index, crop: crop, qty: qty, total: crop.price * qty });
+
+            document.getElementById("cartSummaryText").innerHTML = 
+                "Items in cart: <strong>" + cartCount + " items</strong> | Total Amount: <strong>₱" + cartTotal.toFixed(2) + "</strong>";
+
+            alert("✅ Added to Cart:\n" + qty + " kg of " + crop.name + " from " + crop.seller + "\nSubtotal: ₱" + (crop.price * qty).toFixed(2));
+        }
+
+        function checkoutOrder() {
+            if (cartItems.length === 0) {
+                alert("Your shopping cart is empty!");
+                return;
+            }
+
+            var crops = getCrops();
+            var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
+
+            cartItems.forEach(function(item) {
+                // Deduct stock
+                crops[item.cropIndex].stock -= item.qty;
+
+                // Push new order request tied to seller
+                orders.push({
+                    id: Math.floor(100 + Math.random() * 900),
+                    buyer: currentUserName,
+                    cropName: item.crop.name,
+                    seller: item.crop.seller,
+                    qty: item.qty,
+                    total: item.total,
+                    status: "Pending"
+                });
+            });
+
+            localStorage.setItem("agrilink_crops", JSON.stringify(crops));
+            localStorage.setItem("agrilink_orders", JSON.stringify(orders));
+
+            alert("🎉 Order Request Successfully Submitted!\nThank you, " + currentUserName + "!");
+            
+            cartCount = 0;
+            cartTotal = 0;
+            cartItems = [];
+            document.getElementById("cartSummaryText").innerHTML = "Items in cart: <strong>0 items</strong> | Total Amount: <strong>₱0.00</strong>";
+
+            renderConsumerListings();
+            renderMyOrders();
+        }
+
+        function renderMyOrders() {
+            var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
+            var tbody = document.getElementById("myOrdersTableBody");
+            tbody.innerHTML = "";
+
+            var myOrders = orders.filter(function(o) { return o.buyer === currentUserName; });
+
+            if (myOrders.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='4' style='text-align: center; color: #777;'>No order requests submitted yet.</td></tr>";
+                return;
+            }
+
+            myOrders.forEach(function(o) {
+                var color = "#d9534f";
+                if (o.status === "Accepted") color = "#f0ad4e";
+                if (o.status === "Shipped") color = "#2e7d32";
+
+                var row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>📦 ${o.cropName}</td>
+                    <td>${o.seller}</td>
+                    <td>${o.qty} kg (₱${parseFloat(o.total).toFixed(2)})</td>
+                    <td style="text-align: center; color: ${color}; font-weight: bold;">${o.status}</td>
+                `;
+            });
+        }
+
+        function filterCrops() {
+            var input = document.getElementById("searchInput").value.toLowerCase();
+            var category = document.getElementById("categorySelect").value;
+            var cards = document.getElementsByClassName("produce-card");
+
+            for (var i = 0; i < cards.length; i++) {
+                var name = cards[i].getAttribute("data-name");
+                var cat = cards[i].getAttribute("data-category");
+
+                var matchesSearch = name.includes(input);
+                var matchesCategory = (category === "all" || cat === category);
+
+                cards[i].style.display = (matchesSearch && matchesCategory) ? "block" : "none";
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById("consumerWelcomeTitle").innerText = "🛒 Welcome, " + currentUserName + "!";
+            renderConsumerListings();
+            renderMyOrders();
+        };
+    </script>
+
+</body>
+</html>

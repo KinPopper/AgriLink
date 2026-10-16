@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink - Producer Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>AgriLink</h1>
+        <p>Producer Control Panel</p>
+        <nav>
+            <a href="producer.html">Dashboard</a> | 
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 850px; margin-bottom: 60px;">
+        
+        <div class="welcome-banner">
+            <h2 id="producerWelcomeTitle">👨‍🌾 Welcome, Producer!</h2>
+            <p><strong>Farm Name:</strong> <span id="farmNameDisplay">Dela Cruz Organic Farms</span></p>
+            <p><strong>Location:</strong> Rizal, Philippines</p>
+        </div>
+
+        <!-- REVENUE SUMMARY BANNER -->
+        <div style="background: #e8f5e9; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c8e6c9; display: flex; gap: 20px; flex-wrap: wrap;">
+            <div>
+                <h3 style="margin: 0; color: #f0ad4e;">⏳ Pending Revenue: <span id="displayPending">₱0.00</span></h3>
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #2e7d32;">💰 Total Revenue (Shipped): <span id="displayRevenue">₱4,350.00</span></h3>
+            </div>
+        </div>
+
+        <h3 class="section-title">➕ Add New Harvest Listing</h3>
+        <form id="addCropForm" style="margin-bottom: 30px;">
+            <div class="form-group">
+                <label>Crop / Produce Name:</label>
+                <input type="text" id="newCropName" placeholder="e.g. Fresh Red Tomatoes" required>
+            </div>
+
+            <div class="form-group">
+                <label>Category:</label>
+                <select id="newCropCategory">
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Grains & Rice">Grains & Rice</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Price per Kilogram (₱):</label>
+                <input type="number" id="newCropPrice" placeholder="e.g. 60" required>
+            </div>
+
+            <div class="form-group">
+                <label>Available Stock (kg):</label>
+                <input type="number" id="newCropStock" placeholder="e.g. 100" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Post Crop Listing</button>
+        </form>
+
+        <h3 class="section-title">📦 My Active Harvest Listings</h3>
+        <table class="agri-table">
+            <thead>
+                <tr>
+                    <th>Crop Name</th>
+                    <th>Category</th>
+                    <th>Price/kg</th>
+                    <th>Stock</th>
+                    <th style="text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="producerCropTable"></tbody>
+        </table>
+
+        <h3 class="section-title">📋 Incoming Orders & Status Management</h3>
+        <div id="incomingOrdersContainer"></div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 AgriLink - ICCT Colleges Web Project</p>
+    </footer>
+
+    <script>
+        var currentFarm = localStorage.getItem("loggedInFarm") || "Dela Cruz Organic Farms";
+
+        function getCrops() {
+            return JSON.parse(localStorage.getItem("agrilink_crops") || "[]");
+        }
+
+        function renderProducerTable() {
+            var crops = getCrops();
+            var tbody = document.getElementById("producerCropTable");
+            tbody.innerHTML = "";
+
+            var myCropsCount = 0;
+
+            crops.forEach(function(crop, index) {
+                if (crop.seller === currentFarm) {
+                    myCropsCount++;
+                    var row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>📦 ${crop.name}</td>
+                        <td>${crop.category}</td>
+                        <td>₱${parseFloat(crop.price).toFixed(2)}</td>
+                        <td>${crop.stock} kg</td>
+                        <td style="text-align: center;">
+                            <button onclick="editCrop(${index})" class="btn-action" style="background: #f0ad4e;">Edit</button>
+                            <button onclick="removeCrop(${index})" class="btn-action">Remove</button>
+                        </td>
+                    `;
+                }
+            });
+
+            if (myCropsCount === 0) {
+                tbody.innerHTML = "<tr><td colspan='5' style='text-align: center; color: #777;'>No active crop listings for your farm yet.</td></tr>";
+            }
+        }
+
+        document.getElementById("addCropForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var crops = getCrops();
+            crops.push({
+                id: Date.now(),
+                name: document.getElementById("newCropName").value,
+                seller: currentFarm,
+                category: document.getElementById("newCropCategory").value,
+                price: parseFloat(document.getElementById("newCropPrice").value),
+                stock: parseInt(document.getElementById("newCropStock").value)
+            });
+
+            localStorage.setItem("agrilink_crops", JSON.stringify(crops));
+            renderProducerTable();
+            alert("New crop listing posted and live on the marketplace!");
+            document.getElementById("addCropForm").reset();
+        });
+
+        function editCrop(index) {
+            var crops = getCrops();
+            var newPrice = prompt("Enter new price per kg (₱):", crops[index].price);
+            var newStock = prompt("Enter new available stock (kg):", crops[index].stock);
+
+            if (newPrice !== null && newStock !== null) {
+                crops[index].price = parseFloat(newPrice);
+                crops[index].stock = parseInt(newStock);
+                localStorage.setItem("agrilink_crops", JSON.stringify(crops));
+                renderProducerTable();
+                alert("Listing updated successfully!");
+            }
+        }
+
+        function removeCrop(index) {
+            if (confirm("Are you sure you want to remove this crop listing?")) {
+                var crops = getCrops();
+                crops.splice(index, 1);
+                localStorage.setItem("agrilink_crops", JSON.stringify(crops));
+                renderProducerTable();
+            }
+        }
+
+        function renderIncomingOrders() {
+            var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
+            var container = document.getElementById("incomingOrdersContainer");
+            container.innerHTML = "";
+
+            var myOrdersCount = 0;
+
+            orders.forEach(function(o, index) {
+                if (o.seller === currentFarm) {
+                    myOrdersCount++;
+                    var card = document.createElement("div");
+                    card.style = "border: 1px solid #ccc; border-radius: 5px; padding: 15px; margin-bottom: 10px; background-color: #fdfdfd;";
+                    card.innerHTML = `
+                        <p style="margin: 0 0 5px 0;"><strong>Order #${o.id}</strong> — ${o.buyer}</p>
+                        <p style="margin: 0 0 5px 0;"><strong>Item:</strong> ${o.cropName} (${o.qty} kg) | <strong>Total:</strong> ₱${parseFloat(o.total).toFixed(2)}</p>
+                        <p style="margin: 0 0 10px 0;"><strong>Status:</strong> <span style="font-weight: bold;">${o.status}</span></p>
+                        <div style="display: flex; gap: 5px;">
+                            <button onclick="updateOrderStatus(${index}, 'Accepted')" style="background-color: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer;">Accept</button>
+                            <button onclick="updateOrderStatus(${index}, 'Rejected')" style="background-color: #d9534f; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer;">Reject</button>
+                            <button onclick="updateOrderStatus(${index}, 'Shipped')" style="background-color: #0275d8; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer;">Mark as Shipped</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+
+            if (myOrdersCount === 0) {
+                container.innerHTML = "<p style='color: #777;'>No incoming order requests for your farm yet.</p>";
+            }
+
+            calculateRevenue();
+        }
+
+        function updateOrderStatus(index, status) {
+            var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
+            orders[index].status = status;
+            localStorage.setItem("agrilink_orders", JSON.stringify(orders));
+            renderIncomingOrders();
+            alert("Order status updated to: " + status);
+        }
+
+        function calculateRevenue() {
+            var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
+            var pendingTotal = 0;
+            var shippedTotal = 4350.00; 
+
+            orders.forEach(function(o) {
+                if (o.seller === currentFarm) {
+                    if (o.status === "Accepted") {
+                        pendingTotal += o.total;
+                    } else if (o.status === "Shipped") {
+                        shippedTotal += o.total;
+                    }
+                }
+            });
+
+            document.getElementById("displayPending").innerText = "₱" + pendingTotal.toFixed(2);
+            document.getElementById("displayRevenue").innerText = "₱" + shippedTotal.toFixed(2);
+        }
+
+        window.onload = function() {
+            var user = localStorage.getItem("loggedInUser") || "Juan Dela Cruz";
+            document.getElementById("producerWelcomeTitle").innerText = "👨‍🌾 Welcome, " + user + "!";
+            document.getElementById("farmNameDisplay").innerText = currentFarm;
+            renderProducerTable();
+            renderIncomingOrders();
+        };
+    </script>
+
+</body>
+</html>
