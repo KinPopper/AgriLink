@@ -8,9 +8,13 @@
 </head>
 <body>
 
-    <header>
-        <h1>AgriLink</h1>
-        <p>Direct Producer-to-Consumer Market</p>
+    <!-- HEADER WITH LOGO -->
+    <header style="padding: 15px 30px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;">
+            <img src="AgriLink_Logo.png" alt="AgriLink Logo" style="height: 50px; width: 50px; object-fit: contain; border-radius: 50%; padding: 2px;">
+            <h1 style="font-size: 37px; margin: 0;">AgriLink</h1>
+        </div>
+        <p style="margin: 0 0 10px 0;">Direct Producer-to-Consumer Market</p>
         <nav>
             <a href="index.html">Home</a> | 
             <a href="register.html">Register</a> | 
@@ -18,18 +22,114 @@
         </nav>
     </header>
 
-    <div class="container" style="text-align: center;">
-        <h2>Welcome to AgriLink</h2>
-        <p>Connecting local agricultural producers directly with buyers in the community.</p>
-        <br>
-        <a href="register.html">
-            <button class="btn-submit">Create an Account</button>
-        </a>
+    <!-- MASTER CONTAINER WRAPPER (900px max-width) -->
+    <div style="max-width: 900px; margin: 30px auto 60px auto; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box;">
+
+        <!-- 1. TOP ROW: WELCOME BANNER (LEFT) & LOG IN CONTAINER (RIGHT) -->
+        <div style="display: flex; gap: 20px; width: 100%; align-items: stretch; box-sizing: border-box;">
+            
+            <!-- LEFT: WELCOME BANNER -->
+            <div class="container" style="flex: 1; max-width: 100%; margin: 0; text-align: center; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;">
+                <h2>Welcome to AgriLink</h2>
+                <p style="margin-bottom: 20px;">Connecting local agricultural producers directly with buyers in the community.</p>
+                <a href="register.html">
+                    <button class="btn-submit" style="width: 100%;">Create an Account</button>
+                </a>
+            </div>
+
+            <!-- RIGHT: QUICK LOGIN PANEL CONTAINER -->
+            <div class="container" style="flex: 1; max-width: 100%; margin: 0; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;">
+                <h3 style="margin-top: 0; color: #2e7d32; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 8px; text-align: center;">Have an account? Log in!</h3>
+                
+                <form id="homeLoginForm" onsubmit="handleHomeLogin(event)">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="font-size: 13px; font-weight: bold;">Email / Username:</label>
+                        <input type="text" id="homeLoginEmail" placeholder="e.g. farmer@agrilink.com" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="font-size: 13px; font-weight: bold;">Password:</label>
+                        <input type="password" id="homeLoginPassword" placeholder="Enter password" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                    </div>
+
+                    <button type="submit" class="btn-submit" style="background-color: #2e7d32; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Log In</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- 2. MIDDLE ROW: FULL-WIDTH IMAGE CONTAINER (STRETCHED 100%) -->
+        <div class="container" style="max-width: 100%; width: 100%; margin: 0; padding: 15px; box-sizing: border-box; text-align: center;">
+            <img src="farmer_img.jpg" alt="AgriLink Marketplace" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: 6px; display: block;">
+        </div>
+
+        <!-- 3. BOTTOM ROW: FULL-WIDTH ABOUT US SECTION (STRETCHED 100%) -->
+        <div class="container" style="max-width: 100%; width: 100%; margin: 0; box-sizing: border-box;">
+            <h3 style="margin-top: 0; color: #2e7d32; font-size: 20px; border-bottom: 1px solid #eee; padding-bottom: 8px;">About Us</h3>
+            <p style="color: #444; line-height: 1.6; margin-bottom: 10px;">
+                <strong>AgriLink</strong> is a dedicated direct producer-to-consumer marketplace designed to bridge the gap between local farmers and community buyers. Our mission is to empower agricultural producers by providing them with a digital platform to showcase their fresh harvests, manage orders seamlessly, and maximize their revenue without relying on middlemen.
+            </p>
+            <p style="color: #444; line-height: 1.6; margin: 0;">
+                Whether you are a local farmer looking to expand your reach or a household seeking fresh, high-quality produce straight from the source, AgriLink brings the farm directly to your doorstep.
+            </p>
+        </div>
+
     </div>
 
+    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 AgriLink - ICCT Colleges Web Project</p>
     </footer>
+
+    <!-- JAVASCRIPT FOR QUICK LOGIN -->
+    <script>
+        var defaultUsers = [
+            { role: "Admin", name: "System Administrator", farm: "N/A (Platform Admin)", email: "admin", password: "admin" },
+            { role: "Producer", name: "Juan Dela Cruz", farm: "Dela Cruz Organic Farms", email: "farmer@agrilink.com", password: "123456" },
+            { role: "Consumer", name: "Carlos Gomez", farm: "N/A (Consumer)", email: "consumer1@agrilink.com", password: "123456" }
+        ];
+
+        function handleHomeLogin(event) {
+            event.preventDefault();
+            var emailInput = document.getElementById("homeLoginEmail").value.trim().toLowerCase();
+            var passwordInput = document.getElementById("homeLoginPassword").value.trim();
+
+            if (localStorage.getItem("deactivate_" + emailInput) === "true") {
+                alert("❌ Login Blocked: Your account has been deactivated by the Admin.");
+                return;
+            }
+
+            var registeredUsers = JSON.parse(localStorage.getItem("agrilink_users") || "[]");
+            var allUsers = defaultUsers.concat(registeredUsers);
+
+            var matchedUser = allUsers.find(function(u) {
+                return u.email.toLowerCase() === emailInput && u.password === passwordInput;
+            });
+
+            if (!matchedUser) {
+                alert("❌ Invalid email or password!");
+                return;
+            }
+
+            localStorage.setItem("loggedInUser", matchedUser.name);
+            localStorage.setItem("loggedInEmail", matchedUser.email);
+            localStorage.setItem("loggedInRole", matchedUser.role);
+            if (matchedUser.farm) {
+                localStorage.setItem("loggedInFarm", matchedUser.farm);
+            }
+
+            alert("🎉 Welcome back, " + matchedUser.name + "!");
+
+            var role = matchedUser.role.toLowerCase();
+            if (role === "admin") {
+                window.location.href = "admin.html";
+            } else if (role === "producer") {
+                window.location.href = "producer.html";
+            } else {
+                window.location.href = "consumer.html";
+            }
+        }
+    </script>
 
 </body>
 </html>
