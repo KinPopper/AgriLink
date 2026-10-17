@@ -8,79 +8,125 @@
 </head>
 <body>
 
-    <header>
-        <h1>AgriLink Marketplace</h1>
+    <!-- HEADER -->
+        <header style="padding: 15px 30px;">
+        <!-- HEADER FLEX CONTAINER FOR LOGO & TITLE -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;">
+            <!-- IMG LOGO (Replace 'logo.png' with your actual image filename) -->
+            <img src="AgriLink_Logo.png" alt="AgriLink Logo" style="height: 50px; width: 50px; object-fit: contain; border-radius: 50%; padding: 2px;">
+            
+            <h1 style="font-size: 37px;">AgriLink</h1>
+                   
+        </div>
+        
         <p>Fresh Produce Direct From Local Farmers</p>
+
         <nav>
             <a href="index.html">Home</a> | 
             <a href="login.html">Logout</a>
         </nav>
     </header>
 
-    <div class="container" style="max-width: 850px; margin-bottom: 60px;">
+    <!-- MAIN TWO-COLUMN CONTAINER -->
+    <div class="container" style="max-width: 1150px; display: flex; gap: 20px; align-items: flex-start; background: transparent; border: none; box-shadow: none; padding: 0; margin-bottom: 60px;">
         
-        <!-- DYNAMIC CONSUMER WELCOME BANNER -->
-        <div class="welcome-banner">
-            <h2 id="consumerWelcomeTitle">🛒 Welcome, Consumer!</h2>
-            <p>Explore fresh harvests directly supplied by registered local producers.</p>
-        </div>
-
-        <!-- SHOPPING CART SUMMARY WIDGET -->
-        <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 5px; margin-bottom: 25px;">
-            <h3 style="margin-top: 0; color: #856404;">🛒 My Shopping Cart Summary</h3>
-            <p style="margin: 0 0 10px 0;" id="cartSummaryText">Items in cart: <strong>0 items</strong> | Total Amount: <strong>₱0.00</strong></p>
-            <button onclick="checkoutOrder()" class="btn-submit" style="background-color: #f0ad4e; width: auto; padding: 8px 15px;">Submit Order Request</button>
-        </div>
-
-        <!-- SEARCH & CATEGORY FILTER -->
-        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #ddd; margin-bottom: 25px;">
-            <div class="form-group" style="margin-bottom: 10px;">
-                <label>Search Produce Name:</label>
-                <input type="text" id="searchInput" placeholder="Search crops (e.g. Tomatoes, Corn, Rice)..." onkeyup="filterCrops()">
+        <!-- ========================================== -->
+        <!-- LEFT COLUMN: MAIN CONTENT & PRODUCE CARDS  -->
+        <!-- ========================================== -->
+        <div style="flex: 2.2; background: #ffffff; padding: 25px; border-radius: 8px; border: 1px solid #ccc;">
+            
+            <!-- WELCOME BANNER -->
+            <div class="welcome-banner">
+                <h2 id="consumerWelcomeTitle">🛒 Welcome, Carlos Gomez!</h2>
+                <p>Explore fresh harvests directly supplied by registered local producers.</p>
             </div>
-            <div class="form-group" style="margin-bottom: 0;">
-                <label>Filter by Category:</label>
-                <select id="categorySelect" onchange="filterCrops()">
-                    <option value="all">All Categories</option>
-                    <option value="Vegetables">Vegetables</option>
-                    <option value="Fruits">Fruits</option>
-                    <option value="Grains & Rice">Grains & Rice</option>
-                </select>
+
+            <!-- SEARCH & CATEGORY FILTER -->
+            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #ddd; margin-bottom: 25px;">
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Search Produce Name:</label>
+                    <input type="text" id="searchInput" placeholder="Search crops (e.g. Tomatoes, Corn, Rice)..." onkeyup="filterCrops()">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Filter by Category:</label>
+                    <select id="categorySelect" onchange="filterCrops()">
+                        <option value="all">All Categories</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Grains & Rice">Grains & Rice</option>
+                    </select>
+                </div>
             </div>
+
+            <!-- PRODUCE LISTINGS -->
+            <h3 class="section-title">📦 Fresh Produce Listings (All Registered Farmers)</h3>
+            <div id="consumerCropListings"></div>
+
         </div>
 
-        <h3 class="section-title">📦 Fresh Produce Listings (All Registered Farmers)</h3>
 
-        <!-- DYNAMIC LISTINGS -->
-        <div id="consumerCropListings"></div>
+        <!-- ========================================== -->
+        <!-- RIGHT COLUMN: SIDEBAR (CART & ORDERS)      -->
+        <!-- ========================================== -->
+        <div style="flex: 1; position: sticky; top: 20px; display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- 1. SHOPPING CART WIDGET -->
+            <div style="background: #ffffff; border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #2e7d32; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    🛒 My Shopping Cart
+                </h3>
 
-        <!-- ORDER TRACKING -->
-        <h3 class="section-title">📋 My Submitted Orders & Progress Tracking</h3>
-        <table class="agri-table">
-            <thead>
-                <tr>
-                    <th>Order Item</th>
-                    <th>Seller / Farm</th>
-                    <th>Qty & Total</th>
-                    <th style="text-align: center;">Status Flag</th>
-                </tr>
-            </thead>
-            <tbody id="myOrdersTableBody"></tbody>
-        </table>
+                <!-- CART ITEMS CONTAINER (With Edit/Delete) -->
+                <div id="cartItemsContainer" style="max-height: 220px; overflow-y: auto; margin-bottom: 15px;">
+                    <p style="color: #777; font-size: 13px; text-align: center; margin: 15px 0;">Your cart is currently empty.</p>
+                </div>
+
+                <!-- CART SUMMARY & CHECKOUT -->
+                <div style="border-top: 1px solid #eee; padding-top: 10px;">
+                    <p style="margin: 5px 0; font-size: 14px;" id="cartSummaryText">
+                        Total Amount: <strong>₱0.00</strong>
+                    </p>
+                    <button onclick="checkoutOrder()" class="btn-submit" style="background-color: #2e7d32; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;">
+                        Submit Order Request
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. SUBMITTED ORDERS TRACKING WIDGET -->
+            <div style="background: #ffffff; border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #2e7d32; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    📋 My Submitted Orders
+                </h3>
+                <div style="max-height: 250px; overflow-y: auto;">
+                    <table class="agri-table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background: #f1f1f1; text-align: left;">
+                                <th style="padding: 6px; border: 1px solid #ddd;">Item / Seller</th>
+                                <th style="padding: 6px; border: 1px solid #ddd;">Qty & Total</th>
+                                <th style="padding: 6px; border: 1px solid #ddd; text-align: center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myOrdersTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
 
     </div>
 
+    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 AgriLink - ICCT Colleges Web Project</p>
     </footer>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         var currentUserName = localStorage.getItem("loggedInUser") || "Carlos Gomez";
-        var cartCount = 0;
-        var cartTotal = 0;
         var cartItems = [];
 
-        // Full multi-seller initial crop inventory
         var defaultCrops = [
             { id: 101, name: "Fresh Red Tomatoes", seller: "Dela Cruz Organic Farms", category: "Vegetables", price: 60, stock: 100 },
             { id: 102, name: "Sweet Yellow Corn", seller: "Dela Cruz Organic Farms", category: "Grains & Rice", price: 45, stock: 250 },
@@ -92,7 +138,6 @@
 
         function getCrops() {
             var stored = localStorage.getItem("agrilink_crops");
-            // Auto-fix storage if old single-farmer structure was cached
             if (!stored || JSON.parse(stored).length < 6) {
                 localStorage.setItem("agrilink_crops", JSON.stringify(defaultCrops));
                 return defaultCrops;
@@ -146,14 +191,80 @@
                 return;
             }
 
-            cartCount += qty;
-            cartTotal += (crop.price * qty);
-            cartItems.push({ cropIndex: index, crop: crop, qty: qty, total: crop.price * qty });
+            var existingItem = cartItems.find(function(item) { return item.cropIndex === index; });
+            if (existingItem) {
+                if (existingItem.qty + qty > crop.stock) {
+                    alert("❌ Total quantity in cart exceeds available stock!");
+                    return;
+                }
+                existingItem.qty += qty;
+            } else {
+                cartItems.push({ cropIndex: index, crop: crop, qty: qty });
+            }
 
-            document.getElementById("cartSummaryText").innerHTML = 
-                "Items in cart: <strong>" + cartCount + " items</strong> | Total Amount: <strong>₱" + cartTotal.toFixed(2) + "</strong>";
+            renderCart();
+            alert("✅ Added " + qty + " kg of " + crop.name + " to your cart!");
+        }
 
-            alert("✅ Added to Cart:\n" + qty + " kg of " + crop.name + " from " + crop.seller + "\nSubtotal: ₱" + (crop.price * qty).toFixed(2));
+        function renderCart() {
+            var container = document.getElementById("cartItemsContainer");
+            var summaryText = document.getElementById("cartSummaryText");
+            container.innerHTML = "";
+
+            if (cartItems.length === 0) {
+                container.innerHTML = '<p style="color: #777; font-size: 13px; text-align: center; margin: 15px 0;">Your cart is currently empty.</p>';
+                summaryText.innerHTML = "Total Amount: <strong>₱0.00</strong>";
+                return;
+            }
+
+            var totalAmount = 0;
+
+            cartItems.forEach(function(item, cartIdx) {
+                var subtotal = item.crop.price * item.qty;
+                totalAmount += subtotal;
+
+                var cartDiv = document.createElement("div");
+                cartDiv.style.cssText = "background: #f9f9f9; border: 1px solid #e0e0e0; padding: 8px; border-radius: 5px; margin-bottom: 8px; font-size: 12px;";
+                cartDiv.innerHTML = `
+                    <div style="font-weight: bold; color: #2e7d32; margin-bottom: 2px;">${item.crop.name}</div>
+                    <div style="color: #555; font-size: 11px; margin-bottom: 4px;">${item.crop.seller}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>₱${item.crop.price} × ${item.qty}kg = <strong>₱${subtotal.toFixed(2)}</strong></span>
+                        <div>
+                            <button onclick="changeQty(${cartIdx}, 1)" style="padding: 1px 5px; background: #ddd; border: none; cursor: pointer; border-radius: 3px;">+</button>
+                            <button onclick="changeQty(${cartIdx}, -1)" style="padding: 1px 5px; background: #ddd; border: none; cursor: pointer; border-radius: 3px; margin-left: 2px;">-</button>
+                            <button onclick="removeItem(${cartIdx})" style="padding: 1px 5px; background: #d9534f; color: white; border: none; cursor: pointer; border-radius: 3px; margin-left: 4px;">X</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(cartDiv);
+            });
+
+            summaryText.innerHTML = "Total Amount: <strong>₱" + totalAmount.toFixed(2) + "</strong>";
+        }
+
+        function changeQty(cartIdx, amount) {
+            var item = cartItems[cartIdx];
+            var crops = getCrops();
+            var currentStock = crops[item.cropIndex].stock;
+
+            var newQty = item.qty + amount;
+            if (newQty <= 0) {
+                removeItem(cartIdx);
+                return;
+            }
+            if (newQty > currentStock) {
+                alert("❌ Cannot add more. Reaches stock limit!");
+                return;
+            }
+
+            item.qty = newQty;
+            renderCart();
+        }
+
+        function removeItem(cartIdx) {
+            cartItems.splice(cartIdx, 1);
+            renderCart();
         }
 
         function checkoutOrder() {
@@ -166,17 +277,15 @@
             var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
 
             cartItems.forEach(function(item) {
-                // Deduct stock
                 crops[item.cropIndex].stock -= item.qty;
 
-                // Push new order request tied to seller
                 orders.push({
                     id: Math.floor(100 + Math.random() * 900),
                     buyer: currentUserName,
                     cropName: item.crop.name,
                     seller: item.crop.seller,
                     qty: item.qty,
-                    total: item.total,
+                    total: item.crop.price * item.qty,
                     status: "Pending"
                 });
             });
@@ -186,11 +295,8 @@
 
             alert("🎉 Order Request Successfully Submitted!\nThank you, " + currentUserName + "!");
             
-            cartCount = 0;
-            cartTotal = 0;
             cartItems = [];
-            document.getElementById("cartSummaryText").innerHTML = "Items in cart: <strong>0 items</strong> | Total Amount: <strong>₱0.00</strong>";
-
+            renderCart();
             renderConsumerListings();
             renderMyOrders();
         }
@@ -203,7 +309,7 @@
             var myOrders = orders.filter(function(o) { return o.buyer === currentUserName; });
 
             if (myOrders.length === 0) {
-                tbody.innerHTML = "<tr><td colspan='4' style='text-align: center; color: #777;'>No order requests submitted yet.</td></tr>";
+                tbody.innerHTML = "<tr><td colspan='3' style='text-align: center; color: #777; padding: 10px;'>No orders yet.</td></tr>";
                 return;
             }
 
@@ -214,10 +320,12 @@
 
                 var row = tbody.insertRow();
                 row.innerHTML = `
-                    <td>📦 ${o.cropName}</td>
-                    <td>${o.seller}</td>
-                    <td>${o.qty} kg (₱${parseFloat(o.total).toFixed(2)})</td>
-                    <td style="text-align: center; color: ${color}; font-weight: bold;">${o.status}</td>
+                    <td style="padding: 6px; border: 1px solid #ddd;">
+                        <strong>${o.cropName}</strong><br>
+                        <span style="font-size: 10px; color: #666;">${o.seller}</span>
+                    </td>
+                    <td style="padding: 6px; border: 1px solid #ddd;">${o.qty}kg<br>(₱${parseFloat(o.total).toFixed(2)})</td>
+                    <td style="padding: 6px; border: 1px solid #ddd; text-align: center; color: ${color}; font-weight: bold;">${o.status}</td>
                 `;
             });
         }
@@ -241,6 +349,7 @@
         window.onload = function() {
             document.getElementById("consumerWelcomeTitle").innerText = "🛒 Welcome, " + currentUserName + "!";
             renderConsumerListings();
+            renderCart();
             renderMyOrders();
         };
     </script>
