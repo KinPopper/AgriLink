@@ -31,7 +31,7 @@
         </div>
 
         <!-- SECTION TITLE: OUTSIDE CONTAINER -->
-        <h3 style="margin: 0 0 10px 0; color: #2e7d32; font-size: 17px;">📊 Overall Platform Statistics (Live)</h3>
+        <h3 style="margin: 0 0 10px 0; color: #2e7d32; font-size: 17px;"> Overall Platform Statistics (Live)</h3>
 
         <!-- CONTAINER 1: STATISTICS CARDS -->
         <div style="display: flex; gap: 15px; margin-bottom: 30px;">
@@ -50,7 +50,7 @@
         </div>
 
         <!-- SECTION TITLE: OUTSIDE CONTAINER -->
-        <h3 style="margin: 0 0 10px 0; color: #2e7d32; font-size: 17px;">🌾 Registered Producers & Live Synchronized Earnings</h3>
+        <h3 style="margin: 0 0 10px 0; color: #2e7d32; font-size: 17px;"> Registered Producers & Live Synchronized Earnings</h3>
 
         <!-- CONTAINER 2: PRODUCERS TABLE -->
         <div style="background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #ddd; margin-bottom: 30px; overflow-x: auto;">
@@ -73,7 +73,7 @@
         </div>
 
         <!-- SECTION TITLE: OUTSIDE CONTAINER -->
-        <h3 style="margin: 0 0 10px 0; color: #2e7d32; font-size: 17px;">👥 Registered Consumers</h3>
+        <h3 style="margin: 0 0 10px 0; color: #2e7d32; font-size: 17px;"> Registered Consumers</h3>
 
         <!-- CONTAINER 3: CONSUMERS TABLE -->
         <div style="background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid #ddd; overflow-x: auto;">
@@ -178,7 +178,7 @@
                     // Get active crops for this producer farm
                     var farmCrops = crops.filter(function(c) { return c.seller === p.farm; });
                     var cropNamesList = farmCrops.length > 0 
-                        ? farmCrops.map(function(c) { return "📦 " + c.name + " (" + c.stock + "kg)"; }).join("<br>") 
+                        ? farmCrops.map(function(c) { return " - " + c.name + " (" + c.stock + "kg)"; }).join("<br>") 
                         : "<span style='color: #777;'>No active listings</span>";
 
                     var isDeactivated = localStorage.getItem("deactivate_" + p.email.toLowerCase()) === "true";
