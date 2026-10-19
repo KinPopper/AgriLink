@@ -9,7 +9,7 @@
 <body>
 
     <!-- HEADER -->
-        <header style="padding: 15px 30px;">
+    <header style="padding: 15px 30px;">
         <!-- HEADER FLEX CONTAINER FOR LOGO & TITLE -->
         <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;">
             <!-- IMG LOGO (Replace 'logo.png' with your actual image filename) -->
@@ -37,7 +37,7 @@
             
             <!-- WELCOME BANNER -->
             <div class="welcome-banner">
-                <h2 id="consumerWelcomeTitle">🛒 Welcome, Carlos Gomez!</h2>
+                <h2 id="consumerWelcomeTitle">Welcome, Carlos Gomez!</h2>
                 <p>Explore fresh harvests directly supplied by registered local producers.</p>
             </div>
 
@@ -59,7 +59,7 @@
             </div>
 
             <!-- PRODUCE LISTINGS -->
-            <h3 class="section-title">📦 Fresh Produce Listings (All Registered Farmers)</h3>
+            <h3 class="section-title"> Fresh Produce Listings (All Registered Farmers)</h3>
             <div id="consumerCropListings"></div>
 
         </div>
@@ -159,7 +159,7 @@
                 card.setAttribute("data-category", crop.category);
 
                 card.innerHTML = `
-                    <h3 style="color: #2e7d32; margin-top: 0; margin-bottom: 5px;">📦 ${crop.name}</h3>
+                    <h3 style="color: #2e7d32; margin-top: 0; margin-bottom: 5px;"> ${crop.name}</h3>
                     <p style="margin: 3px 0;"><strong>Farmer / Seller:</strong> <span style="color: #2e7d32; font-weight: bold;">${crop.seller}</span></p>
                     <p style="margin: 3px 0;"><strong>Category:</strong> ${crop.category}</p>
                     <p style="margin: 3px 0;"><strong>Price:</strong> ₱${parseFloat(crop.price).toFixed(2)} / kg</p>
@@ -347,7 +347,7 @@
         }
 
         window.onload = function() {
-            document.getElementById("consumerWelcomeTitle").innerText = "🛒 Welcome, " + currentUserName + "!";
+            document.getElementById("consumerWelcomeTitle").innerText = "Welcome, " + currentUserName + "!";
             renderConsumerListings();
             renderCart();
             renderMyOrders();
