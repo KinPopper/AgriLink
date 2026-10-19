@@ -8,42 +8,33 @@
 </head>
 <body>
 
-    <!-- HEADER -->
+
     <header style="padding: 15px 30px;">
-        <!-- HEADER FLEX CONTAINER FOR LOGO & TITLE -->
         <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;">
-            <!-- IMG LOGO -->
             <img src="AgriLink_Logo.png" alt="AgriLink Logo" style="height: 50px; width: 50px; object-fit: contain; border-radius: 50%; padding: 2px;">
-            <h1 style="font-size: 37px;">AgriLink</h1>
+            <h1 style="font-size: 37px; margin: 0;">AgriLink</h1>
         </div>
-        <p>Producer Control Panel</p>
-        <nav>
+        <p style="margin: 0;">Producer Control Panel</p>
+        <nav style="margin-top: 5px;">
             <a href="producer.html">Dashboard</a> | 
             <a href="login.html">Logout</a>
         </nav>
     </header>
 
-    <!-- TOP WELCOME BANNER (NO CONTAINER, TEXT ONLY) -->
     <div style="max-width: 1150px; margin: 25px auto 15px auto; text-align: center;">
         <h2 id="producerWelcomeTitle" style="margin: 0 0 5px 0; color: #2e7d32; font-size: 24px;">Welcome, Producer!</h2>
         <p style="margin: 3px 0; font-size: 15px;"><strong>Farm Name:</strong> <span id="farmNameDisplay">Dela Cruz Organic Farms</span></p>
         <p style="margin: 3px 0; font-size: 15px; color: #555;"><strong>Location:</strong> Rizal, Philippines</p>
     </div>
 
-    <!-- MAIN TWO-COLUMN CONTAINER -->
+
     <div class="container" style="max-width: 1150px; display: flex; gap: 20px; align-items: flex-start; background: transparent; border: none; box-shadow: none; padding: 0; margin-bottom: 60px;">
 
-        <!-- ========================================== -->
-        <!-- LEFT COLUMN: FORMS & ACTIVE LISTINGS       -->
-        <!-- ========================================== -->
         <div style="flex: 1.8; display: flex; flex-direction: column; gap: 20px;">
 
-            <!-- SECTION 1: ADD NEW HARVEST LISTING -->
+
             <div>
-                <!-- TITLE OUTSIDE CONTAINER -->
                 <h3 style="margin: 0 0 8px 0; color: #2e7d32; font-size: 18px;">Add New Harvest Listing</h3>
-                
-                <!-- SEPARATE CONTAINER -->
                 <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #ccc;">
                     <form id="addCropForm" onsubmit="handleAddCrop(event)">
                         <div class="form-group" style="margin-bottom: 12px;">
@@ -70,18 +61,13 @@
                             <input type="number" id="cropStock" placeholder="e.g. 100" min="1" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
                         </div>
 
-                        <!-- POST BUTTON -->
                         <button type="submit" class="btn-submit" style="background-color: #2e7d32; color: white; width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Post Crop Listing</button>
                     </form>
                 </div>
             </div>
 
-            <!-- SECTION 2: MY ACTIVE HARVEST LISTINGS -->
             <div>
-                <!-- TITLE OUTSIDE CONTAINER -->
                 <h3 style="margin: 0 0 8px 0; color: #2e7d32; font-size: 18px;">My Active Harvest Listings</h3>
-                
-                <!-- SEPARATE CONTAINER -->
                 <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #ccc;">
                     <table class="agri-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <thead>
@@ -94,35 +80,39 @@
                             </tr>
                         </thead>
                         <tbody id="producerListingsTableBody">
-                            <!-- Populated dynamically -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-        </div>
-
-
-        <!-- ========================================== -->
-        <!-- RIGHT COLUMN: SIDEBAR (ORDERS & STATUS)    -->
-        <!-- ========================================== -->
-        <div style="flex: 1.2; position: sticky; top: 20px;">
-            
-            <!-- TITLE OUTSIDE CONTAINER -->
-            <h3 style="margin: 0 0 8px 0; color: #2e7d32; font-size: 18px;">📋 Incoming Orders & Status</h3>
-
-            <!-- SEPARATE SIDEBAR CONTAINER -->
-            <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                <div id="incomingOrdersContainer" style="max-height: 500px; overflow-y: auto;">
-                    <!-- Populated dynamically -->
+            <div>
+                <h3 style="margin: 0 0 8px 0; color: #2e7d32; font-size: 18px;">Farm Financial Summary</h3>
+                <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #ccc; display: flex; gap: 15px;">
+                    <div style="flex: 1; background: #fff9c4; padding: 15px; border-radius: 6px; border: 1px solid #fff59d;">
+                        <div style="font-size: 12px; font-weight: bold; color: #f57f17;">Pending Sales / Revenue</div>
+                        <div id="producerPendingRevenue" style="font-size: 18px; font-weight: bold; color: #e65100; margin-top: 5px;">₱0.00</div>
+                    </div>
+                    <div style="flex: 1; background: #e8f5e9; padding: 15px; border-radius: 6px; border: 1px solid #c8e6c9;">
+                        <div style="font-size: 12px; font-weight: bold; color: #2e7d32;">Total Shipped Sales / Revenue</div>
+                        <div id="producerShippedRevenue" style="font-size: 18px; font-weight: bold; color: #1b5e20; margin-top: 5px;">₱0.00</div>
+                    </div>
                 </div>
             </div>
 
         </div>
 
+
+        <div style="flex: 1.2; position: sticky; top: 20px;">
+            <h3 style="margin: 0 0 8px 0; color: #2e7d32; font-size: 18px;">📋 Incoming Orders & Status</h3>
+            <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div id="incomingOrdersContainer" style="max-height: 500px; overflow-y: auto;">
+
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 AgriLink - ICCT Colleges Web Project</p>
     </footer>
@@ -130,7 +120,7 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         var currentUserName = localStorage.getItem("loggedInUser") || "Nikka Kyle Tagal";
-        var currentFarmName = localStorage.getItem("loggedInFarm") || "Nixs Farm";
+        var currentFarmName = localStorage.getItem("loggedInFarm") || "Dela Cruz Organic Farms";
 
         var defaultCrops = [
             { id: 101, name: "Fresh Red Tomatoes", seller: "Dela Cruz Organic Farms", category: "Vegetables", price: 60, stock: 100 },
@@ -148,6 +138,27 @@
                 return defaultCrops;
             }
             return JSON.parse(stored);
+        }
+
+        // Calculate and Render Farm Financial Revenues
+        function renderProducerRevenues() {
+            var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
+            var pendingTotal = 0;
+            var shippedTotal = 0;
+
+            orders.forEach(function(o) {
+                if (o.seller === currentFarmName) {
+                    var amount = parseFloat(o.total || 0);
+                    if (o.status === "Shipped") {
+                        shippedTotal += amount;
+                    } else if (o.status === "Pending" || o.status === "Accepted") {
+                        pendingTotal += amount;
+                    }
+                }
+            });
+
+            document.getElementById("producerPendingRevenue").innerText = "₱" + pendingTotal.toFixed(2);
+            document.getElementById("producerShippedRevenue").innerText = "₱" + shippedTotal.toFixed(2);
         }
 
         // Render Active Produce Listings Table
@@ -248,7 +259,6 @@
             var container = document.getElementById("incomingOrdersContainer");
             container.innerHTML = "";
 
-            // STRICT FILTER: Only show orders where seller strictly matches this producer's farm name
             var myOrders = orders.filter(function(o) { 
                 return o.seller === currentFarmName; 
             });
@@ -286,13 +296,13 @@
         // Update Order Status by unique Order ID
         function updateOrderStatus(orderId, newStatus) {
             var orders = JSON.parse(localStorage.getItem("agrilink_orders") || "[]");
-            
             var orderToUpdate = orders.find(function(o) { return o.id === orderId; });
             
             if (orderToUpdate) {
                 orderToUpdate.status = newStatus;
                 localStorage.setItem("agrilink_orders", JSON.stringify(orders));
                 renderIncomingOrders();
+                renderProducerRevenues(); // Refresh revenues immediately upon status change
             }
         }
 
@@ -302,6 +312,7 @@
             document.getElementById("farmNameDisplay").innerText = currentFarmName;
             renderProducerings();
             renderIncomingOrders();
+            renderProducerRevenues();
         };
     </script>
 
